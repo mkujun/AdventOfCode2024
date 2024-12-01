@@ -16,6 +16,25 @@ public class Main {
         createLeftAndRight(lines, leftList, rightList);
 
         int part1 = countTotalDistance(lines, leftList, rightList);
+        int part2 = 0;
+
+        for (Integer number : leftList) {
+            int count = countOccurrences(number, rightList);
+            int occurance = number * count;
+            part2 = part2 + occurance;
+        }
+
+        System.out.println(part2);
+    }
+
+    public static int countOccurrences(Integer number, ArrayList<Integer> rightList) {
+        int count = 0;
+        for (Integer rightNumber : rightList) {
+            if (number.equals(rightNumber)) {
+                count++;
+            }
+        }
+        return count;
     }
 
     private static int countTotalDistance(List<String> lines, ArrayList<Integer> leftList, ArrayList<Integer> rightList) {
@@ -34,8 +53,10 @@ public class Main {
             int left = Integer.parseInt(line.split("   ")[0]);
             int right = Integer.parseInt(line.split("   ")[1]);
 
-            addInSortedOrder(leftList, left);
-            addInSortedOrder(rightList, right);
+            //addInSortedOrder(leftList, left);
+            //addInSortedOrder(rightList, right);
+            leftList.add(left);
+            rightList.add(right);
         }
     }
 
