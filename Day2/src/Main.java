@@ -3,7 +3,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 public class Main {
-    static int part1 = 0;
+    static int part2 = 0;
 
     public static void main(String[] args) {
         //Path filePath = Paths.get("Day2/src/example.txt");
@@ -12,13 +12,28 @@ public class Main {
 
         readReportLineFrom(lines);
 
-        System.out.println(part1);
+        System.out.println(part2);
     }
 
     private static void readReportLineFrom(List<String> lines) {
         for (String line: lines) {
             if(isReportLineSafe(line)) {
-                part1++;
+                part2++;
+            }
+            else {
+                removeLevelFromReportLine(line);
+            }
+        }
+    }
+
+    private static void removeLevelFromReportLine(String line) {
+        String[] levels = line.split(" ");
+
+        for (int i = 0; i < levels.length; i++) {
+            String[] newLevels = removeElementAtIndex(levels, i);
+            if(isReportLineSafe(String.join(" ", newLevels))) {
+                part2++;
+                break;
             }
         }
     }
@@ -45,5 +60,21 @@ public class Main {
         }
 
         return isAscending || isDescending;
+    }
+
+    private static String[] removeElementAtIndex(String[] array, int index) {
+        if (index < 0 || index >= array.length) {
+            throw new IndexOutOfBoundsException("Index out of bounds: " + index);
+        }
+
+        String[] newArray = new String[array.length - 1];
+        int newIndex = 0;
+
+        for (int i = 0; i < array.length; i++) {
+            if (i != index) {
+                newArray[newIndex++] = array[i];
+            }
+        }
+        return newArray;
     }
 }
