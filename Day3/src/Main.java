@@ -7,9 +7,7 @@ import java.util.regex.Pattern;
 
 public class Main {
     public static void main(String[] args) {
-        long part1 = 0;
-
-        String input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
+        long part2 = 0;
 
         String outString = "";
         try {
@@ -24,13 +22,21 @@ public class Main {
             throw new RuntimeException(e);
         }
 
-        Pattern pattern = Pattern.compile("mul\\(\\d+,\\d+\\)");
+        Pattern pattern = Pattern.compile("(mul\\(\\d+,\\d+\\))|(do\\(\\))|(don't\\(\\))");
         Matcher matcher = pattern.matcher(outString);
 
+        boolean isEnabled = true;
         ArrayList<String> results = new ArrayList<>();
 
         while (matcher.find()) {
-            results.add(matcher.group());
+            String match = matcher.group();
+            if (match.equals("do()")) {
+                isEnabled = true;
+            } else if (match.equals("don't()")) {
+                isEnabled = false;
+            } else if (isEnabled && match.startsWith("mul")) {
+                results.add(match);  // Process only if enabled
+            }
         }
 
         // Print all matched results
@@ -42,8 +48,8 @@ public class Main {
             int num1 = Integer.parseInt(numbers.split(",")[0]);
             int num2 = Integer.parseInt(numbers.split(",")[1]);
 
-            part1 = part1 + (num1*num2);
+            part2 = part2 + (num1*num2);
         }
-        System.out.println(part1);
+        System.out.println(part2);
     }
 }
