@@ -10,6 +10,7 @@ public class Main {
 
         int part1 = 0;
 
+        /*
         List<List<String>> rows = Grid.extractRows(matrix);
         List<List<String>> cols = Grid.extractColumns(matrix);
         List<List<String>> leftToRightDiagonals = Grid.extractLeftToRightDiagonals(matrix);
@@ -31,8 +32,28 @@ public class Main {
             part1 = part1 + countXmas(item);
         }
 
-        System.out.println(part1);
+         */
 
+        searchMas(matrix);
+        //System.out.println(part1);
+    }
+
+    private static void searchMas(String[][] grid) {
+        int part2 = 0;
+
+        for (int i = 1; i < grid[0].length - 1; i++) {
+            for (int j = 1; j < grid[0].length - 1; j++) {
+                String leftDiagonal = grid[i-1][j-1] + grid[i][j] + grid[i+1][j+1];
+                String rightDiagonal = grid[i-1][j+1] + grid[i][j] + grid[i+1][j-1];
+
+                if ((leftDiagonal.equals("MAS") || leftDiagonal.equals("SAM")) &&
+                (rightDiagonal.equals("MAS") || rightDiagonal.equals("SAM"))) {
+                    part2++;
+                }
+            }
+        }
+
+        System.out.println(part2);
     }
 
     public static int countXmas(List<String> item) {
