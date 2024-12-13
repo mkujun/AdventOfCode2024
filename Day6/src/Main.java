@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Main {
 
-    private static String direction = "";
+    private static String direction = "up";
     private static int[] startingPoint = new int[]{};
     private static boolean walk = true;
 
@@ -16,7 +16,7 @@ public class Main {
         String[][] matrix = Utils.readFileAndConvertToMatrix(filePath);
 
         startingPoint = findStartingPoint(matrix);
-        direction = "up";
+
         while(walk) {
             if (direction.equals("up")) goUp(matrix);
             else if (direction.equals("right")) goRight(matrix);
@@ -62,9 +62,6 @@ public class Main {
             }
             else {
                 matrix[i][startingPoint[1]] = "X";
-                if (i == matrix.length - 1) {
-                    return;
-                }
             }
         }
     }
@@ -83,9 +80,6 @@ public class Main {
             }
             else {
                 matrix[startingPoint[0]][j] = "X";
-                if (j == 0) {
-                   return;
-                }
             }
         }
     }
@@ -144,5 +138,4 @@ public class Main {
         }
         return null;
     }
-
 }
