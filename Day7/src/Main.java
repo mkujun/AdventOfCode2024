@@ -11,7 +11,7 @@ public class Main {
         List<String> lines = Utils.readFile(filePath);
         long part1 = 0;
 
-        char[] symbols = {'+', '*'};
+        char[] symbols = {'+', '*', '|'};
 
         for(String line: lines) {
             long result = Long.parseLong(line.split(":")[0]);
@@ -33,9 +33,12 @@ public class Main {
                     if (operator.equals("+")) {
                         sum = num1 + num2;
                     }
-
                     if (operator.equals("*")) {
                         sum = num1 * num2;
+                    }
+                    if (operator.equals("|")) {
+                        String con = String.valueOf(num1) + String.valueOf(num2);
+                        sum = Long.parseLong(con);
                     }
                 }
                 if (sum == result) {
