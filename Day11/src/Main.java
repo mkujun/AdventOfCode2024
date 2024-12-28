@@ -3,7 +3,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,7 +15,6 @@ public class Main {
 
         for (int i = 0; i < 24; i++) {
             newStones = blink(newStones);
-            //System.out.println(newStones);
         }
 
         System.out.println(newStones.size());
@@ -36,7 +34,6 @@ public class Main {
                 changeEvenStone(stone, newStones);
             }
             else {
-                //Integer newStone = Integer.parseInt(stone) * 2024;
                 Long newStone = Long.parseLong(stone) * 2024;
                 newStones.add(newStone.toString());
             }
@@ -55,11 +52,11 @@ public class Main {
         newStones.add(normalizeString(secondHalf));
     }
 
-    public static String normalizeString(String input) {
+    private static String normalizeString(String input) {
         if (input == null || input.isEmpty()) {
-            return ""; // Handle null or empty input
+            return "";
         }
-        // Remove leading zeros and default to "0" if the result is empty
+
         String result = input.replaceFirst("^0+", "");
         return result.isEmpty() ? "0" : result;
     }
