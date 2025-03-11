@@ -1,8 +1,6 @@
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -11,53 +9,74 @@ public class Main {
         //Path filePath = Paths.get("Day11/src/test.txt");
         List<String> lines = Utils.readFile(filePath);
 
-        List<String> newStones = blink(new ArrayList<>(Arrays.asList(lines.get(0).split(" "))));
+        Map<String, Long> dict = new HashMap();
+        List<String> currentStones = new ArrayList<>(Arrays.asList(lines.get(0).split(" ")));
+        Map<String, Long> updates = new HashMap();
 
-        for (int i = 0; i < 24; i++) {
-            newStones = blink(newStones);
+        for(String stone: currentStones) {
+            dict.put(stone, dict.getOrDefault(stone, 0L) + 1);
         }
 
-        System.out.println(newStones.size());
-    }
+        for (int i = 1; i <= 75; i++) {
+            updates.clear();
+            updates.putAll(dict);
 
-    private static List<String> blink(List<String> stones) {
-        return readStones(stones, new ArrayList<>());
-    }
+            for (Map.Entry<String, Long> stone : dict.entrySet()) {
+                if (stone.getKey().equals("0")) {
+                    Long numOfZeros = dict.get("0");
+                    String keyOne = "1";
 
-    private static List<String> readStones(List<String> stones, List<String> newStones) {
-        for(String stone : stones) {
+                    updates.put(keyOne, updates.getOrDefault(keyOne, 0L) + numOfZeros);
 
-            if (stone.equals("0")) {
-                newStones.add("1");
+                    // decrement
+                    updates.put(stone.getKey(), updates.getOrDefault(stone.getKey(), 0L) - numOfZeros);
+                }
+                else if (stone.getKey().split("").length % 2 == 0) {
+                    String digits = stone.getKey();
+                    int half = (digits.length()) / 2;
+                    int leftHalf = Integer.parseInt(digits.substring(0, half));
+                    int rightHalf = Integer.parseInt(digits.substring(half, digits.length()));
+
+                    String leftKey = String.valueOf(leftHalf);
+                    String rightKey = String.valueOf(rightHalf);
+
+                    Long numOfOcc = dict.get(stone.getKey());
+
+                    updates.put(leftKey, updates.getOrDefault(leftKey, 0L) + numOfOcc);
+                    updates.put(rightKey, updates.getOrDefault(rightKey, 0L) + numOfOcc);
+
+                    // decrement
+                    updates.put(stone.getKey(), updates.getOrDefault(stone.getKey(), 0L) - numOfOcc);
+                }
+                else {
+                    Long newStone = Long.parseLong(stone.getKey()) * 2024;
+                    String newKey = String.valueOf(newStone);
+
+                    Long numOfOcc = dict.get(stone.getKey());
+
+                    updates.put(newKey, updates.getOrDefault(newKey, 0L) + numOfOcc);
+
+                    // decrement
+                    updates.put(stone.getKey(), updates.getOrDefault(stone.getKey(), 0L) - numOfOcc);
+                }
+
+                // clear key with '0' for value
+                if (updates.get(stone.getKey()).doubleValue() == 0) {
+                    updates.remove(stone.getKey());
+                }
+
             }
-            else if (stone.length() % 2 == 0) {
-                changeEvenStone(stone, newStones);
+
+            dict.clear();
+            dict.putAll(updates);
+
+            Long sum = 0L;
+            for (Map.Entry<String, Long> stone : dict.entrySet()) {
+                sum = sum + stone.getValue();
             }
-            else {
-                Long newStone = Long.parseLong(stone) * 2024;
-                newStones.add(newStone.toString());
-            }
+
+            System.out.println("sum " + sum);
         }
 
-        return newStones;
-    }
-
-    private static void changeEvenStone(String stone, List<String> newStones) {
-        char[] digits = stone.toCharArray();
-
-        String firstHalf = new String(digits, 0, digits.length / 2);
-        newStones.add(firstHalf);
-
-        String secondHalf = new String(digits, digits.length / 2, digits.length - digits.length / 2);
-        newStones.add(normalizeString(secondHalf));
-    }
-
-    private static String normalizeString(String input) {
-        if (input == null || input.isEmpty()) {
-            return "";
-        }
-
-        String result = input.replaceFirst("^0+", "");
-        return result.isEmpty() ? "0" : result;
     }
 }
