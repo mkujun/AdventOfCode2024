@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,7 +29,9 @@ public class Utils {
 
         List<List<String>> matrix = new ArrayList<>();
         for (String line : lines) {
-            List<String> chars = List.of(line.split(""));
+            //List<String> chars = List.of(line.split(""));
+            List<String> chars = Collections.unmodifiableList(Arrays.asList(line.split(""))); // java 8
+
             matrix.add(chars);
         }
 
