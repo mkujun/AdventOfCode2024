@@ -1,3 +1,6 @@
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -6,8 +9,9 @@ import java.util.Objects;
 
 public class Main {
     static int part1 = 1;
+    static boolean hasOnlyOnes = true;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException {
         //Path filePath = Paths.get("Day14/src/example.txt");
         //Path filePath = Paths.get("Day14/src/test.txt");
         Path filePath = Paths.get("Day14/src/input.txt");
@@ -33,19 +37,22 @@ public class Main {
 
         // initial
         drawPositionsOnGrid(positions, grid);
-        //printGrid(grid);
+        printGrid(grid, 0);
 
         // every second move
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 7000; i++) {
             move(positions, xBound, yBound);
 
             drawPositionsOnGrid(positions, grid);
-            //printGrid(grid);
+
+            if (hasOnlyOnes) {
+                printGrid(grid, i);
+            }
         }
 
-        calculateQuadrants(grid, xBound, yBound);
+        //calculateQuadrants(grid, xBound, yBound);
 
-        System.out.println("robots: " + part1);
+        //System.out.println("robots: " + part1);
     }
 
     private static void calculateQuadrants(String[][] grid, int xBound, int yBound) {
@@ -199,6 +206,7 @@ public class Main {
 
     private static void drawPositionsOnGrid(List<Position> positions, String[][] grid) {
         initGrid(grid); // each time clean grid
+        hasOnlyOnes = true;
 
         for(Position p: positions) {
             if (Objects.equals(grid[p.getY()][p.getX()], " ")) {
@@ -207,11 +215,17 @@ public class Main {
             else {
                 int positionValue = Integer.parseInt(grid[p.getY()][p.getX()]) + 1;
                 grid[p.getY()][p.getX()] = String.valueOf(positionValue);
+                hasOnlyOnes = false;
             }
         }
     }
 
-    private static void printGrid(String[][] grid) {
+    private static void printGrid(String[][] grid, int counter) throws FileNotFoundException {
+        PrintStream out = new PrintStream(new FileOutputStream("output.txt", true));
+        System.setOut(out);
+
+        if (counter > 1000) {
+
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 System.out.print("\"" + grid[i][j] + "\" ");
@@ -219,7 +233,8 @@ public class Main {
             System.out.println();
         }
 
-        System.out.println("============================");
+        System.out.println("============================iteration number " + counter +  " =====");
+        }
     }
 
 }
