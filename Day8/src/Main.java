@@ -12,8 +12,9 @@ public class Main {
 
     public static void main(String[] args) {
         //Path filePath = Paths.get("Day8/src/example.txt");
+        //Path filePath = Paths.get("Day8/src/test.txt");
         Path filePath = Paths.get("Day8/src/input.txt");
-        //List<String> lines = Utils.readFile(filePath);
+        List<String> lines = Utils.readFile(filePath);
         String[][] grid = Utils.readFileAndConvertToMatrix(filePath);
 
         xBound = grid.length;
@@ -58,34 +59,21 @@ public class Main {
     private static void createAntiNode(AntennaPosition current, List<AntennaPosition> others) {
         for(AntennaPosition otherPosition : others) {
 
-            int mirrorX = current.getX();
-            int mirrorY = current.getY();
+            List<int[]> nodes = Utils.getGridBoundedPointsOnLine(
+                    current.getX(), current.getY(),
+                    otherPosition.getX(), otherPosition.getY(),
+                    xBound, yBound);
 
-            if (current.getX() < otherPosition.getX()) {
-                mirrorX = current.getX() - (otherPosition.getX() - current.getX());
-            }
-            if (current.getX() > otherPosition.getX()) {
-                mirrorX = current.getX() + (current.getX() - otherPosition.getX());
-            }
-
-            if (current.getY() < otherPosition.getY()) {
-                mirrorY = current.getY() - (otherPosition.getY() - current.getY());
-            }
-            if (current.getY() > otherPosition.getY()) {
-                mirrorY = current.getY() + (current.getY() - otherPosition.getY());
-            }
-
-            if (mirrorX < xBound && mirrorY < yBound
-                    && mirrorX >= 0 && mirrorY >= 0
-            ) {
-                String antiNode = mirrorX + "," + mirrorY;
+            for (int[] node : nodes) {
+                String antiNode = node[0] + "," + node[1];
 
                 if (!antiNodes.containsKey(antiNode)) {
                     antiNodes.put(antiNode, antiNode);
                 }
-            }
-        }
 
+            }
+
+        }
     }
 
 }

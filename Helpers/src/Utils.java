@@ -1,10 +1,7 @@
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class Utils {
     public static List<String> readFile(Path filePath) {
@@ -53,5 +50,56 @@ public class Utils {
             System.out.println();
         }
         System.out.println();
+    }
+
+    public static List<int[]> getGridBoundedPointsOnLine(int x1, int y1, int x2, int y2, int width, int height) {
+        List<int[]> result = new ArrayList<>();
+
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+
+        int g = gcd(Math.abs(dx), Math.abs(dy));
+        int stepX = dx / g;
+        int stepY = dy / g;
+
+        // Move in both directions from (x1, y1) until we go out of bounds
+        for (int k = 0; ; k++) {
+            int x = x1 + k * stepX;
+            int y = y1 + k * stepY;
+            if (inBounds(x, y, width, height)) {
+                result.add(new int[]{x, y});
+            } else {
+                break;
+            }
+        }
+
+        for (int k = -1; ; k--) {
+            int x = x1 + k * stepX;
+            int y = y1 + k * stepY;
+            if (inBounds(x, y, width, height)) {
+                result.add(new int[]{x, y});
+            } else {
+                break;
+            }
+        }
+
+        // Sort results by x, then y (optional)
+        result.sort(Comparator.comparingInt((int[] a) -> a[0])
+                .thenComparingInt(a -> a[1]));
+
+        return result;
+    }
+
+    private static boolean inBounds(int x, int y, int width, int height) {
+        return x >= 0 && x < width && y >= 0 && y < height;
+    }
+
+    private static int gcd(int a, int b) {
+        while (b != 0) {
+            int tmp = a % b;
+            a = b;
+            b = tmp;
+        }
+        return a;
     }
 }
